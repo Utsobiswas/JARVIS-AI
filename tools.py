@@ -67,33 +67,33 @@ async def send_email(
         
         
         gmail_user = os.getenv("GMAIL_USER")
-        gmail_password = os.getenv("GMAIL_APP_PASSWORD")  # Use App Password, not regular password
+        gmail_password = os.getenv("GMAIL_APP_PASSWORD")  
         
         if not gmail_user or not gmail_password:
             logging.error("Gmail credentials not found in environment variables")
             return "Email sending failed: Gmail credentials not configured."
         
-        # Create message
+        
         msg = MIMEMultipart()
         msg['From'] = gmail_user
         msg['To'] = to_email
         msg['Subject'] = subject
         
-        # Add CC if provided
+        
         recipients = [to_email]
         if cc_email:
             msg['Cc'] = cc_email
             recipients.append(cc_email)
         
-        # Attach message body
+        
         msg.attach(MIMEText(message, 'plain'))
         
-        # Connect to Gmail SMTP server
+        
         server = smtplib.SMTP(smtp_server, smtp_port)
-        server.starttls()  # Enable TLS encryption
+        server.starttls()  
         server.login(gmail_user, gmail_password)
         
-        # Send email
+       
         text = msg.as_string()
         server.sendmail(gmail_user, recipients, text)
         server.quit()
@@ -109,4 +109,5 @@ async def send_email(
         return f"Email sending failed: SMTP error - {str(e)}"
     except Exception as e:
         logging.error(f"Error sending email: {e}")
+
         return f"An error occurred while sending email: {str(e)}"
